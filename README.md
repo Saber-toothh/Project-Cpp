@@ -1,6 +1,6 @@
 # Về BTL của chúng tôi
 
-## Tên: Mô phỏng hàng đợi gói tin Router và QoS
+## Tên: Mô phỏng QoS và Phân tích hiệu năng mạng
 
 ## Mục đích: Tìm hiểu và ứng dụng thư viện STL C++
 
