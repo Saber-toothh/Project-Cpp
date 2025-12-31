@@ -1,0 +1,7 @@
+{
+  "simulation_name": "Test_QoS_Case_1",
+  "total_time": 100,
+  "bandwidth_mbps": 10,
+  "max_queue_size": 50,
+  "traffic_rate": { "normal": 0.8, "vip": 0.2 }
+}
