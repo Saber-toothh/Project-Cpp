@@ -10,14 +10,16 @@ enum PacketType { DATA , VIDEO , VOICE };
 
 struct Config {
     int max_queue_size;    
-    double bandwidth_bps;  
+    double bandwidth_bps;
+    double totalTime;  
 };
 
 struct Packet {
     int id;
     PacketType type;          // 0: Thường, 1: VIP ,2: SIU VIP
     int size_bytes;        
-    double arrivalTime;   
+    double arrivalTime;
+    double finishedTime;   
 
     // Khởi tạo dấu so sánh
     bool operator<(const Packet& other) const {
@@ -58,7 +60,7 @@ public:
     // Xử lý và gửi đi
     void process(double current_time) {
         // Nếu Router đang bận hoặc không có hàng thì thôi
-        if (current_time < busy_until || buffer.empty()) {
+        if (current_time < busy_until || buffer.empty() || busy_until > config.totalTime) {
             return;
         }
 
@@ -71,6 +73,7 @@ public:
         
         // Cập nhật thời gian bận
         busy_until = current_time + delay;
+        p.finishedTime = busy_until;
 
         cout << "Time " << current_time << ": [SENT] Xu ly xong goi " << p.id 
              << " (Mat " << delay << "s)" << endl;
@@ -90,7 +93,7 @@ public:
 
 int main() {
     // Cấu hình: Max 5 gói, Tốc độ 1000 bit/s
-    Config cfg = { 5, 1000.0 };
+    Config cfg = { 5, 1000.0 ,100.0};
     Router myRouter(cfg);
 
     cout << "=== MO PHONG ROUTER (SIMPLE) ===" << endl;
