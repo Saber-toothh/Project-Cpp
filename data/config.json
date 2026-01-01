@@ -3,5 +3,9 @@
   "total_time": 100,
   "bandwidth_mbps": 10,
   "max_queue_size": 50,
-  "traffic_rate": { "normal": 0.8, "vip": 0.2 }
+  "traffic_rate": { 
+    "data_ratio": 0.5, 
+    "video_ratio": 0.3,
+    "voice_ratio": 0.2
+  }
 }
