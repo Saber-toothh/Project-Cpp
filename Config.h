@@ -27,7 +27,7 @@ struct Config {
 
 // 3. KHAI BÁO MACRO (Phép thuật nằm ở đây)
 // Lưu ý: Phải khai báo TrafficRate trước thì Config mới hiểu
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TrafficRate, normal, vip)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TrafficRate, data, video, voice)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Config, simulation_name, total_time, bandwidth_mbps, max_queue_size, traffic_rate)
 
 // 4. Khai báo hàm load (chỉ tên hàm)
