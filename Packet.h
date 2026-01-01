@@ -7,7 +7,7 @@
 // 2. Namespace alias: Để viết json cho ngắn thay vì nlohmann::json
 using json = nlohmann::json;
 
-// 3. Enum: Định danh loại gói tin cho dễ đọc
+// 3. Định danh loại gói tin
 enum PacketType { DATA , VIDEO, VOICE };
 
 // 4. Struct: Định nghĩa cấu trúc dữ liệu
@@ -38,5 +38,6 @@ struct Packet {
 // --- D. MACRO JSON ---
 // Giúp thư viện tự động tạo code để biến Struct thành JSON và ngược lại
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Packet, id, type, size, arrivalTime, startProcessTime, finishTime)
+
 
 #endif
