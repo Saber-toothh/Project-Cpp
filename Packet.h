@@ -1,43 +1,35 @@
-// 1. Include Guards: Chống việc file này bị gọi nhiều lần gây lỗi trùng lặp
 #ifndef PACKET_H
 #define PACKET_H
+#include <ostream>
+/* Chức năng chính của file Packet.h :
+	- Định nghĩa các loại dịch vụ và cấu trúc dữ liệu cơ bản của gói tin 
+*/
 
-#include "json.hpp" // Thư viện để chuyển đổi Packet <-> JSON
-
-// 2. Namespace alias: Để viết json cho ngắn thay vì nlohmann::json
-using json = nlohmann::json;
-
-// 3. Định danh loại gói tin
-enum PacketType { DATA , VIDEO, VOICE };
-
-// 4. Struct: Định nghĩa cấu trúc dữ liệu
-struct Packet {
-    // A. DỮ LIỆU (DATA)
-    int id;                  // Mã định danh
-    PacketType type;         // Loại (để xét ưu tiên)
-    double size;             // Kích thước (để tính thời gian truyền)
-    double arrivalTime;      // Lúc đến Router
-    double startProcessTime; // Lúc bắt đầu được xử lý
-    double finishTime;       // Lúc xử lý xong
-
-    // B. HÀM TIỆN ÍCH (HELPER METHOD)
-    // Tính toán nhanh độ trễ
-    double getLatency() const { return finishTime - arrivalTime; }
+// Các loại dịch vụ của gói tin: 
+enum class ServiceType {   
+    VOICE,   // Thoại - ưu tiên cao(3) - size nhỏ(100–200 bytes)
+    VIDEO,   // Video - ưu tiên trung bình(2) - size trung bình(500–1000 bytes)
+    DATA     // Dữ liệu - ưu tiên thấp(1) - size lớn(1000–1500 bytes)
     
-    // C. ĐỊNH NGHĨA TOÁN TỬ SO SÁNH 
-    bool operator<(const Packet& other) const {
-        // 1. Nếu cùng loại (cùng VIP hoặc cùng Thường):
-        if (type == other.type) {
-            return arrivalTime > other.arrivalTime; 
-        } else {// 2. Nếu khác loại:
-        // Gói có type nhỏ (0) sẽ thua gói có type lớn (1)
-        return type < other.type; }
-    }
+/*	Dùng enum class thay vì enum thường do :
+	enum class giúp tăng tính an toàn cho dữ liệu và tránh xung đột tên 
+	vì nếu muốn sử dụng dữ liệu (VOICE,VIDEO,DATA) bắt buộc ghi rõ nguồn gốc (ServiceType::____)
+*/
 };
 
-// --- D. MACRO JSON ---
-// Giúp thư viện tự động tạo code để biến Struct thành JSON và ngược lại
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Packet, id, type, size, arrivalTime, startProcessTime, finishTime)
+// Cấu trúc dữ liệu của một gói tin:
+struct Packet {
+    int id;                 // ID gói tin (tăng dần:1,2,3,..), mỗi 1 gói tin được gắn với 1 ID
+    int size;               // Kích thước gói tin (bytes) (phụ thuộc vào dịch vụ của gói tin đó)
+    int priority;           // Mức ưu tiên (1: thấp, 2: trung bình, 3: cao)
+    double arrivalTime;     // Thời điểm gói tin đến router
+    ServiceType service;    // Loại dịch vụ (VOICE,VIDEO,DATA)
+};
 
-
+// Khai báo toán tử in Packet
+std::ostream& operator<<(std::ostream& os, const Packet& p);
 #endif
+
+
+
+
